@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <title>All Mongeese</title>
+</head>
+
+<body>
+    <h1>All Mongeese</h1>
+    <%for(mongoose in mongeese){%>
+        <div class="mongoose" style="border: solid thin black; height: 130px; width: 500px; padding-left: 30px;">
+            <p>Name: <a href="/mongoose/<%= mongeese[mongoose]._id %>"><%= mongeese[mongoose].name%></a></p>
+            <p>Age: <%= mongeese[mongoose].age%></i></p>
+            <div>
+                <a href="/destroy/<%= mongeese[mongoose]._id %>">Delete | </a>
+                <a href="/edit/<%= mongeese[mongoose]._id %>">Edit</a>
+            </div>
+        </div>
+    <% } %>
+    <button><a href="/mongoose">Create New Mongoose!</a></button>
+</body>
+</html>

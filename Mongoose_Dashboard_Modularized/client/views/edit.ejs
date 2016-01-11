@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <title>Edit Mongoose</title>
+</head>
+
+<body>
+    <h1>Edit Mongoose</h1>
+    <form method="post" action="/mongoose/<%= mongoose._id %>">
+        <p>Name: <input type="text" name="name" value="<%= mongoose.name %>"></p>
+        <p>Age: <input type="text" name="age" value="<%= mongoose.age %>"></p>
+        <input type="submit" value="Update Mongoose!">
+    </form>
+    <button><a href="/destroy/<%= mongoose._id %>">Delete</a></button>
+    <button><a href="/">Cancel</a></button>
+</body>
+</html>

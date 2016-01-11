@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <title>Quoting Dojo</title>
+</head>
+
+<body>
+    <h1>Here are all of the Awesome Quotes</h1>
+    <% for (var i in quotes) { %>
+        <h3>Name: <%= quotes[i].name %> </h3>
+        <h3>Quote: <%= quotes[i].quote %> </h3>
+        <hr>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<div ng-controller="playController">
+    <div class="container">
+        <h2>Hi <span ng-bind="current_user.name"></span>!</h2>
+        <h3>Choose an answer for each of the following questions and submit the test once done.</h3>
+        <h3>Good Luck!</h3>
+        <div class="question">
+            <h4><span ng-bind='count'></span><span ng-bind="question.question"></span>?</h4>
+            <label>
+                <input type="radio" ng-model='answer' ng-value="question.answers[0].value">
+                <span ng-bind="question.answers[0].value"></span>
+            </label></br>
+            <label>
+                <input type="radio" ng-model='answer' ng-value="question.answers[1].value">
+                <span ng-bind="question.answers[1].value"></span>
+            </label></br>
+            <label>
+                <input type="radio" ng-model='answer' ng-value="question.answers[2].value">
+                <span ng-bind="question.answers[2].value"></span>
+            </label></br>
+        </div>
+        <a class="btn btn-md btn-warning" href="#/">Cancel</a><button class="btn btn-md btn-success"ng-click="submit()" ng-bind="button"></button>
+    </div>
+</div>

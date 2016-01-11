@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+<script src="C:\Users\john\Desktop\MEAN\JS projects\js-deck\jquery-2.1.4.min.js"></script>
+<script>
+    function Cards(){
+        var cards = [];
+        var suit = 0;
+        var suits = ["club", "diamond", "heart", "spade"]; 
+        for (var j = 0; j <= 3; j++){
+            for(var i = 2; i <= 14; i++){
+                cards.push({name: suits[suit]+"-"+i, value: i, picture: i+"_of_"+suits[suit]+"s.png"});
+            }
+            suit++;
+        }
+        return cards;
+    }
+    function Deck(){
+        Deck.prototype.shuffle = function(){
+            var m = this.cards.length, t, i;
+            while (m) {
+                i = Math.floor(Math.random() * m--);
+                t = this.cards[m];
+                this.cards[m] = this.cards[i];
+                this.cards[i] = t;
+            }
+        }
+        Deck.prototype.deal = function(){
+            return this.cards.pop();
+        }
+        Deck.prototype.reset = function(){
+            this.cards = Cards();
+            console.log(this.cards);
+            this.show();
+        }
+        Deck.prototype.show = function(){
+            for(var i = 0; i < this.cards.length; i++){
+                $('body').append("<img class='deck' src='"+this.cards[i].picture+"'>");
+            }
+        }
+        Deck.prototype.remove = function(){
+            $('.deck').remove();
+        }
+        this.cards = Cards();
+    }
+    
+    function Player(name) {
+        Player.prototype.take = function(){
+            this.hand.push(deck.deal());
+            deck.remove();
+            deck.show();
+            this.remove();
+            this.show();
+        }
+        Player.prototype.discard = function(index){
+            var card = this.hand.splice(index, 1);
+            deck.cards.push(card[0]);
+            deck.remove();
+            deck.show();
+            this.remove();
+            this.show();
+        }
+        Player.prototype.show = function(){
+            left = 0;
+            for(var i = 0; i < this.hand.length; i++){
+                var left_px= 900 + left;
+                $('body').append("<img id='"+i+"' class='hand' style='left: "+left_px+"px' src='"+this.hand[i].picture+"'>");
+                left+=20;
+            }
+        }
+        Player.prototype.remove = function(){
+            $('.hand').remove();
+        }
+        this.hand = [];
+        this.name = name;
+    }
+    
+    
+    deck = new Deck();
+    player1 = new Player("John");
+    deck.shuffle();
+    deck.show();
+</script>
+<style>
+    .deck {
+        position: absolute;
+        float: left;
+    }
+    .hand {
+        position: absolute;
+        cursor: pointer;
+    }
+    .hand_hovered {
+        margin-left: -250px;
+        left: 50%;
+    }
+    button {
+        float: right;
+    }
+</style>
+<button onclick="player1.take();">Draw</button>
+</body>
+<script>
+    $('body').on('mouseenter', '.hand', function(){
+        var that = this;
+        var timeoutId = setTimeout(hover, 500);
+        function hover(){
+            console.log(that);
+            $(that).addClass('hand_hovered');
+        }
+    })
+    $('body').on('mouseleave', '.hand', function(){
+        var that = this;
+        clearTimeout(timeoutId);
+        $(that).removeClass('hand_hovered');
+    })
+    $('body').on('click', '.hand', function(){
+        console.log(this);
+        player1.discard($(this).attr('id'));
+    })
+</script>
+</html>

@@ -1,0 +1,34 @@
+<div ng-controller='dashboardController'>
+    <div class="container">
+        <div style="display: none" id="score_good" class="alert alert-success">
+            <h4>That was awesome, <span ng-bind="current_user.name"></span>! You got <span ng-bind="current_user.score"></span> out of <span ng-bind="fraction"></span> questions right. Well Done!</h4>
+        </div>
+        <div style="display: none" id="score_bad" class="alert alert-danger">
+            <h4>That sucked, <span ng-bind="current_user.name"></span>! You got <span ng-bind="current_user.score"></span> out of <span ng-bind="fraction"></span> questions right. Try again to get a better score</h4>
+        </div>
+        <div class="jumbotron"  style="text-align: center">
+            <h1>Welcome, <span ng-bind="current_user.name"></span>!</h1>
+            <a class="btn btn-lg btn-primary" href="#/lets_play">Play!</a>
+            <h3>Click the button above to start the trivia game!</h3>
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <input type="text" ng-model="filter" class="pull-right">
+        <table class="table">
+            <thead>
+                <th>Name</th>
+                <th>Score</th>
+                <th>Percentage</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="user in users | filter: filter | orderBy: '-score'">
+                    <td ng-bind="user.name"></td>
+                    <td ng-bind="user.score" style="display: none"></td>
+                    <td><span ng-bind="user.fraction"></span></td>
+                    <td><span ng-bind="user.percent"></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

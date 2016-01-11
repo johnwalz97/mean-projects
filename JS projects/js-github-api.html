@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body>
+    <button style="background: blue; color: white; font-size: 72px; width: 100%; height: 200px; border-radius: 0px; cursor: pointer;">Click Me!</button>
+    <script>
+        $('button').click(
+            function(){
+                $.get("https://api.github.com/users/johnwalz97", displayName, "json");
+            }
+        )
+        function displayName(data) {
+            console.log(data.name);
+            $("body").append("<p>"+data.name+"</p>")
+        }
+    </script>
+</body>
+</html>

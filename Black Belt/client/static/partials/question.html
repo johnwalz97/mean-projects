@@ -1,0 +1,17 @@
+<div ng-controller='questionController'>
+    <div class="container">
+        <p class="text-danger" ng-bind="error"></p>
+        <h3><u>Add a new question</u></h3>
+        <p ng-bind='question_err' class="text-danger"></p>
+        <label>Question:</label>
+        <input type="text" ng-model='question' required></br>
+        <label>Correct Answer:</label>
+        <input type="text" ng-model="answer0" required></br>
+        <label>Incorrect Answer:</label>
+        <input type="text" ng-model="answer1" required></br>
+        <label>Incorrect Answer:</label>
+        <input type="text" ng-model="answer2" required></br>
+        <a class="btn btn-md btn-warning" href="#/">Cancel</a><input type="submit" class="btn btn-md btn-primary" value="Add Question" ng-click="addQuestion()">           
+    </div>
+    <hr>
+</div>

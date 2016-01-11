@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html ng-app='BlackBelt'>
+<head>
+    <title>Black Belt!!! ;-)</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.js'></script>
+    <script src="/js/angular.js"></script>
+    <script src="/js/angular-route.js"></script>
+    <script src="/js/app.js"></script>
+</head>
+
+<body>
+    <div ng-controller="logoutController">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/">Home</a></li>
+                    <li><a href="#/new_question">Add a Question</a></li>
+                </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <li ng-click="logout()"><a href="#/">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <h3><a href="#"></a></h3>
+    <div ng-view=''></div>
+</body>
+</html>

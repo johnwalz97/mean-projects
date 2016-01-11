@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+    
+<html>
+<head>
+    <title>Mongoose</title>
+</head>
+
+<body>
+    <h1><%= mongoose.name %></h1>
+    <h4>Age: <%= mongoose.age %></h4>
+    <button><a href="/">Go Back</a></button>
+    <button><a href="/edit/<%= mongoose._id %>">Edit</a></button>
+    <button><a href="/destroy/<%= mongoose._id %>">Delete</a></button>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<div ng-controller='productsController'>
+    <div class="container">
+        <h3><u>Add a new product</u></h3>
+        <label>Product Name:</label></br>
+        <p ng-bind='newproduct_err' class="text-danger"></p>
+        <input type="text" ng-model='newproduct'>
+        <input type="submit" class="btn btn-md btn-primary" value="Add Product" ng-click="addProduct()">           
+    </div>
+    <hr>
+    <div class="container">
+        <h2 style="text-align: center"><u>Products</u></h2>
+        <input type="text" placeholder="Search..." class="pull-right" ng-model='filter_name'>
+        <table class="table">
+            <thead>
+                <th>Product Name</th>
+                <th>Created At</th>
+                <th>Actions</th>             
+            </thead>
+            <tbody>
+                <tr ng-repeat='product in products | filter: filter_name'>
+                    <td ng-bind='product.name'></td>
+                    <td ng-bind='product.created_at'></td>
+                    <td><button class="btn btn-md btn-danger" ng-click='removeProduct(product._id)'>Delete</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<html>
+<head>
+<title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+        $(document).ready(function (){
+            var socket = io.connect();
+            $('#submit').click(function (){
+                socket.emit("submitted", {name: $('#name').val(), language: $('#language').val(), location: $('#location').val(), comment: $('#comment').val()});
+            });
+            socket.on('server_response', function (data){
+                console.log('The server says: ' + data);
+                $(".container").show();
+                $("#response").html(data.response);
+                $("#lucky_num").html("Your lucky number is:"+data.lucky_number);
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="container" style="background: green; display: none">
+        <p id="response"></p>
+        <p id="lucky_num"></p>
+    </div>
+    <p>Name: <input type="text" id="name">
+    <p>Location: <select id="location">
+        <option value="Mountain View">Mountain View</option>
+        <option value="Bellevue">Bellevue</option>
+        <option value="Los Angeles">Los Angeles</option>
+        <option value="Dalllas">Dallas</option>
+    </select>
+    <p>Favorite Language: <select id="language">
+        <option value="PHP">PHP</option>
+        <option value="Python">Python</option>
+        <option value="Javascript">Javascript</option>
+        <option value="Ruby">Ruby</option>
+        <option value="Swift">Swift</option>
+    </select>
+    <p>Comment (optional):</p>
+    <textarea id="comment"></textarea>
+    <input type="submit" id="submit">
+</body>
+</html><br>

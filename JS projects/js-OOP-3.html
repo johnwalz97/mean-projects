@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+<body>
+<script>
+    function VehicleConstructor (name, wheels, passengers, speed) {
+        VehicleConstructor.prototype.GenerateVin = function(){
+            var string = "ABCDEFGHIJKLMNOPQRSTUVWXYHZ123456789";
+            return (Math.floor(Math.random()*100000000000000000) + 1);
+        }
+        VehicleConstructor.prototype.UpdateDistanceTravelled = function() {
+            this.distance_travelled += this.speed;
+        }
+        VehicleConstructor.prototype.makeNoise = function(){
+            console.log("honk!");
+        }
+        VehicleConstructor.prototype.move = function(){
+            this.UpdateDistanceTravelled();
+            this.makeNoise();
+        }
+        VehicleConstructor.prototype.checkMiles = function(){
+            console.log(this.distance_travelled);
+        }
+        this.vin = this.GenerateVin();
+        this.distance_travelled = 0;
+        this.name = name;
+        this.wheels = wheels;
+        this.passengers = passengers;
+        this.speed = speed;
+    }
+    
+    var Bike = new VehicleConstructor("Bike", 2, 1, 15);
+    Bike.makeNoise = function(){console.log("ring ring!")};
+    
+    var Sedan = new VehicleConstructor("Sedan", 4, 7, 70);
+    Sedan.makeNoise = function(){console.log("honk honk!")};
+    
+    var Bus = new VehicleConstructor("Bus", 6, 0, 60);
+    Bus.pickUpPassengers = function(num){Bus.passengers+= num};
+</script>
+</body>
+</html>

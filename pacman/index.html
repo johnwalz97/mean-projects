@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Pacman</title>
+    <script src="jquery.min.js"></script>
+    <style>
+        *  {
+            margin: 0px auto;
+            padding: 0px;
+            border: none;
+        }
+        body {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: ;
+        }
+        .container {
+            position: absolute;
+            width: 560px;
+            height: 620px;
+            left: 50%;
+            margin-left: -300px;
+            top: 0px;
+        }
+        .box {
+            position: absolute;
+            display: inline-block;
+            float: left;
+            height: 20px;
+            width: 20px;
+            border: none;
+        }
+        .wall {
+            background: #1C1CD5;
+        }
+        .fill {
+            background: url('images/norm.png');
+        }
+        .empty {
+            background: black;    
+        }
+        .pacman {
+            position: absolute;
+            z-index: 101;
+            height: 20px;
+            width: 20px;
+        }
+        .ghost {
+            position: absolute;
+            z-index: 101;
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img id="pacman" class="pacman" src="http://hsprogramming.yolasite.com/resources/pacman.png">
+        <img id="blinky" class="ghost" src="images/blinky.png">
+        <img id="inky" class="ghost" src="images/inky.png">
+        <img id="pinky" class="ghost" src="images/pinky.png">
+        <img id="clyde" class="ghost" src="images/clyde.png">
+    </div>
+    <script>
+    var link = ["http://hsprogramming.yolasite.com/resources/pacman.png", "http://hsprogramming.yolasite.com/resources/pacman1.png"];
+    var index = 0;
+    var move;
+    var move_left;
+    var move_right;
+    var move_up;
+    var move_down;
+    var Mypacman = document.getElementById("pacman");
+    var keyPressed = [];
+    var walls =  [];
+    var dots = [];
+    var false_count = 0;
+    var characters = [];
+    function GameEngine() {
+        var wall = "wall";
+        var empt = "empty";
+        var fill = "fill";
+        var type = [
+                    wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
+                    wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, wall,
+                    wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall,
+                    wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall,
+                    wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, empt, wall, wall, empt, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, empt, wall, wall, empt, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, fill, fill, wall, wall, fill, wall, wall, empt, empt, empt, empt, empt, empt, empt, empt, empt, empt, wall, wall, fill, wall, wall, fill, fill, fill, wall,
+                    wall, wall, wall, fill, wall, wall, fill, wall, wall, empt, wall, wall, wall, empt, empt, wall, wall, wall, empt, wall, wall, fill, wall, wall, fill, wall, wall, wall,
+                    wall, wall, wall, fill, wall, wall, fill, wall, wall, empt, wall, empt, empt, empt, empt, empt, empt, wall, empt, wall, wall, fill, wall, wall, fill, wall, wall, wall,
+                    fill, fill, fill, fill, fill, fill, fill, empt, empt, empt, wall, empt, empt, empt, empt, empt, empt, wall, empt, empt, empt, fill, fill, fill, fill, fill, fill, fill,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, empt, wall, empt, empt, empt, empt, empt, empt, wall, empt, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, empt, wall, wall, wall, wall, wall, wall, wall, wall, empt, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, fill, fill, wall, wall, fill, wall, wall, empt, empt, empt, empt, empt, empt, empt, empt, empt, empt, wall, wall, fill, wall, wall, fill, fill, fill, wall,
+                    wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, wall, empt, wall, wall, empt, wall, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall,
+                    wall, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, wall, empt, wall, wall, empt, wall, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, wall,
+                    wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall,
+                    wall, fill, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall, wall, fill, wall,
+                    wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall,
+                    wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, wall, wall, wall, wall, wall, wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall,
+                    wall, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, wall, wall, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, fill, wall, wall, wall, wall, fill, wall,
+                    wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, wall, wall, fill, fill, fill, fill, fill, fill, fill, fill, fill, wall,
+                    wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall,
+                ];
+        var count = 0;
+        var dot_count = 0;
+        var left = 0;
+        var top = 0;
+        for(var i = 0; i < 868; i++){
+            if (i % 28 == 0 && i /28 >= 1) {
+                top += 20;
+                left = 0;
+            }
+            if (type[i] == "wall") {
+                $(".container").append("<div id='wall"+count+"' style='left: "+left+"px; top: "+top+"px; z-index: 102' class='box "+type[i]+"'></div>");
+                walls.push({id: 'wall' + count, left: left, top: top})
+                count ++;
+            } else if (type[i] == "fill") {
+                $(".container").append("<div id='dot"+dot_count+"' class='box "+type[i]+"' style='left: "+left+"px; top: "+top+"px'></div>");
+                dots.push({id: 'dot' + dot_count, left: left, top: top})
+                dot_count ++;
+            } else {
+                $(".container").append("<div class='box "+type[i]+"' style='left: "+left+"px; top: "+top+"px'></div>");
+            }
+            left += 20;
+        } 
+        
+        this.loop = function(){
+            //setInterval(pinky.loop, 50);
+            //setInterval(inky.loop, 50);
+            //setInterval(blinky.loop, 50);
+            //setInterval(clyde.loop, 50);
+            for (wall in walls){
+                if (pacman.position.y >= walls[wall].top && pacman.position.y < walls[wall].top + 20 && pacman.position.x <= walls[wall].left + 20 && pacman.position.x > walls[wall].left && pacman.position.direction  == "left" /*|| pacman.position.y < walls[wall].top + 20 && pacman.position.y >= walls[wall].top && pacman.position.x + 20 > walls[wall].left && pacman.position.x < walls[wall].left*/) {
+                    clearInterval(move_left);
+                }
+                if (pacman.position.y >= walls[wall].top && pacman.position.y < walls[wall].top + 20 && pacman.position.x + 20 >= walls[wall].left && pacman.position.x <= walls[wall].left && pacman.position.direction  == "right"  /*|| pacman.position.y < walls[wall].top + 20 && pacman.position.y >= walls[wall].top && pacman.position.x + 20 > walls[wall].left && pacman.position.x < walls[wall].left*/) {
+                    clearInterval(move_right);
+                }
+                if (pacman.position.x >= walls[wall].left && pacman.position.x < walls[wall].left + 20 && pacman.position.y <= walls[wall].top + 20 && pacman.position.y > walls[wall].top && pacman.position.direction == "up") {
+                    clearInterval(move_up);
+                }
+                if (pacman.position.x >= walls[wall].left && pacman.position.x < walls[wall].left + 20 && pacman.position.y + 20 >= walls[wall].top && pacman.position.y < walls[wall].top && pacman.position.direction == "down") {
+                    clearInterval(move_down);
+                }
+            }
+            for(dot in dots) {
+                if (pacman.position.y >= dots[dot].top - 6 && pacman.position.y <= dots[dot].top + 6 && pacman.position.x >= dots[dot].left - 6 && pacman.position.x <= dots[dot].left + 6) {
+                    $("#"+dots[dot].id).replaceWith("<div class='box empty' style='left: "+dots[dot].left+"px; top: "+dots[dot].top+"px'></div>");
+                    delete dots[dot];
+                }
+            }
+            false_count = 0;
+            for(var i = 0; i < dots.length; i++){
+                var element = document.getElementById("dot"+i);
+                if (!element) {
+                    false_count ++;
+                }
+            }
+            if (false_count == dots.length) {
+                alert("Game Completed")
+                game = new GameEngine;
+            }
+            if (pacman.position.x + 20 < 0) {
+                pacman.position.x = 560;
+            }
+            if (pacman.position.x > 560) {
+                pacman.position.x = -20;
+            }
+        }
+    }
+    
+    function Pacman(){
+        this.x = document.body.clientWidth/2 - 300;
+        this.y = 4;
+        this.position = {x: 270, y: 460, direction: "none"};
+        this.draw = function(){
+            $("#pacman").css({top: this.position.y, left: this.position.x});
+        }
+        this.moveLeft = function(){
+            pacman.position.x -= 1;
+            pacman.draw();
+        }
+        this.moveUp = function(){
+            pacman.position.y -= 1;
+            pacman.draw();
+        }
+        this.moveRight = function(){
+            pacman.position.x += 1;
+            pacman.draw();
+        }
+        this.moveDown = function(){
+            pacman.position.y += 1;
+            pacman.draw();
+        }
+        this.eat = function(){
+            if (index == 0) {
+                index = 1;
+            } else {
+                index = 0;
+            }
+            pacman.pic();
+        }
+        this.pic = function(){
+            $("#pacman").attr("src", link[index]);
+        }
+    }
+    
+    function Blinky() {
+        this.x = 225;
+        this.y = 265;
+        this.direction = "none";
+        
+        this.draw = function(){
+            $("#blinky").css({top: this.y, left: this.x});
+        }
+        
+        this.loop = function(){
+            if (this.direction == "up") {
+                this.y ++;
+                this.draw();
+            }
+            if (this.direction == "down") {
+                this.y --;
+                this.draw();
+            }
+            if (this.direction == "left") {
+                this.x --;
+                this.draw();
+            }
+            if (this.direction == "right") {
+                this.x ++;
+                this.draw();
+            }
+        }
+    }
+    
+    function Inky() {
+        this.x = 255;
+        this.y = 265;
+        this.direction = "none";
+        
+        this.draw = function(){
+            $("#inky").css({top: this.y, left: this.x});
+        }
+        
+        this.loop = function(){
+            if (this.direction == "up") {
+                this.y ++;
+                this.draw();
+            }
+            if (this.direction == "down") {
+                this.y --;
+                this.draw();
+            }
+            if (this.direction == "left") {
+                this.x --;
+                this.draw();
+            }
+            if (this.direction == "right") {
+                this.x ++;
+                this.draw();
+            }
+        }
+    }
+    
+    function Pinky() {
+        this.x = 285;
+        this.y = 265;
+        this.direction = "none";
+        
+        this.draw = function(){
+            $("#pinky").css({top: this.y, left: this.x});
+        }
+        
+        this.loop = function(){
+            if (this.direction == "up") {
+                this.y ++;
+                this.draw();
+            }
+            if (this.direction == "down") {
+                this.y --;
+                this.draw();
+            }
+            if (this.direction == "left") {
+                this.x --;
+                this.draw();
+            }
+            if (this.direction == "right") {
+                this.x ++;
+                this.draw();
+            }
+        }
+    }
+    
+    function Clyde() {
+
+        this.x = 315;
+        this.y = 265;
+        this.direction = "none";
+        
+        this.initialize = function(){
+            var num = Math.floor(Math.random() * 4 + 1);
+            
+        }
+        
+        this.draw = function(){
+            $("#clyde").css({top: this.y, left: this.x});
+        }
+        
+        this.loop = function(){
+            if (this.direction == "up") {
+                this.y ++;
+                this.draw();
+            }
+            if (this.direction == "down") {
+                this.y --;
+                this.draw();
+            }
+            if (this.direction == "left") {
+                this.x --;
+                this.draw();
+            }
+            if (this.direction == "right") {
+                this.x ++;
+                this.draw();
+            }
+        }
+    }
+    
+    //initialize game and start loop
+    var game = new GameEngine();
+    var pacman = new Pacman();
+    var blinky = new Blinky();
+    var inky = new Inky();
+    var pinky = new Pinky();
+    var clyde = new Clyde();
+    characters.push(pacman, blinky, inky, pinky, clyde);
+    
+    pacman.draw();
+    blinky.draw();
+    inky.draw();
+    pinky.draw();
+    clyde.draw();
+    setInterval(game.loop, 5);
+    setInterval(pacman.eat, 100)
+    
+    //set key commands
+    $(document).keydown(function(e){
+        var flag = true;
+        if(e.keyCode == 37){//left
+            e.preventDefault();
+            for (wall in walls){
+                if (pacman.position.y >= walls[wall].top && pacman.position.y < walls[wall].top + 20 && pacman.position.x <= walls[wall].left + 20 && pacman.position.x > walls[wall].left) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                if (move_right) {
+                    clearInterval(move_right)
+                }
+                if (move_left) {
+                    clearInterval(move_left)
+                }
+                if (move_down) {
+                    clearInterval(move_down)
+                }
+                if (move_up) {
+                    clearInterval(move_up)
+                }
+                pacman.position.direction = "left";
+                Mypacman.style.webkitTransform = "rotate(1800deg)";
+                Mypacman.style.MozTransform = "rotate(180deg)";
+                Mypacman.style.transform = "rotate(180deg)";
+                move_left = setInterval(pacman.moveLeft, 5);
+            }
+        }
+        if(e.keyCode == 38){//up
+            e.preventDefault();
+            for (wall in walls){
+                if (pacman.position.x >= walls[wall].left && pacman.position.x < walls[wall].left + 20 && pacman.position.y <= walls[wall].top + 20 && pacman.position.y > walls[wall].top) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                if (move_down) {
+                    clearInterval(move_down)
+                }
+                if (move_up) {
+                    clearInterval(move_up)
+                }
+                if (move_left) {
+                    clearInterval(move_left)
+                }
+                if (move_right) {
+                    clearInterval(move_right)
+                }
+                pacman.position.direction = "up";
+                Mypacman.style.webkitTransform = "rotate(270deg)";
+                Mypacman.style.MozTransform = "rotate(270deg)";
+                Mypacman.style.transform = "rotate(270deg)";
+                move_up = setInterval(pacman.moveUp, 5);
+            }
+        }
+        if(e.keyCode == 39){//right
+            e.preventDefault();
+            for (wall in walls){
+                if (pacman.position.y >= walls[wall].top && pacman.position.y < walls[wall].top + 20 && pacman.position.x + 20 >= walls[wall].left && pacman.position.x <= walls[wall].left) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                if (move_left) {
+                    clearInterval(move_left)
+                }
+                if (move_right) {
+                    clearInterval(move_right)
+                }
+                if (move_down) {
+                    clearInterval(move_down)
+                }
+                if (move_up) {
+                    clearInterval(move_up)
+                }
+                pacman.position.direction = "right";
+                Mypacman.style.webkitTransform = "rotate(0deg)";
+                Mypacman.style.MozTransform = "rotate(0deg)";
+                Mypacman.style.transform = "rotate(0deg)";
+                move_right = setInterval(pacman.moveRight, 5);
+            }
+        }
+        if(e.keyCode == 40){//down
+            e.preventDefault();
+            for (wall in walls){
+                if (pacman.position.x >= walls[wall].left && pacman.position.x < walls[wall].left + 20 && pacman.position.y + 20 >= walls[wall].top && pacman.position.y < walls[wall].top) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                if (move_up) {
+                    clearInterval(move_up)
+                }
+                if (move_down) {
+                    clearInterval(move_down)
+                }
+                if (move_left) {
+                    clearInterval(move_left)
+                }
+                if (move_right) {
+                    clearInterval(move_right)
+                }
+                pacman.position.direction = "down";
+                Mypacman.style.webkitTransform = "rotate(90deg)";
+                Mypacman.style.MozTransform = "rotate(90deg)";
+                Mypacman.style.transform = "rotate(90deg)";
+                move_down = setInterval(pacman.moveDown, 5);
+            }
+        }
+	})
+
+</script>
+</body>
+</html>

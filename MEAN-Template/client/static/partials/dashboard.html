@@ -1,0 +1,59 @@
+<div ng-controller='dashboardController'>
+    <div class="container">
+        <h2 style="text-align: center"><u>Customers</u></h2>
+        <input type="text" placeholder="Search..." class="pull-right" ng-model='filter_customer'>
+        <table class="table">
+            <thead>
+                <th>Customer Name</th>
+                <th>Created Date</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat='customer in customers | filter: filter_customer'>
+                    <td ng-bind='customer.name'></td>
+                    <td ng-bind='customer.created_at'></td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="#/customers">Manage all Customers</a>
+    </div>
+    <hr>
+    <div class="container">
+        <h2 style="text-align: center"><u>Orders</u></h2>
+        <input type="text" placeholder="Search..." class="pull-right" ng-model='filter_order'>
+        <table class="table">
+            <thead>
+                <th>Customer Name</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Date Placed</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat='order in orders | filter: filter_order'>
+                    <td ng-bind='order.customer'></td>
+                    <td ng-bind='order.product'></td>
+                    <td ng-bind='order.quantity'></td>
+                    <td ng-bind='order.ordered_at'></td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="#/orders">Manage all Orders</a>
+    </div>
+    <hr>
+    <div class="container">
+        <h2 style="text-align: center"><u>Products</u></h2>
+        <input type="text" placeholder="Search..." class="pull-right" ng-model='filter_product'>
+        <table class="table">
+            <thead>
+                <th>Customer Name</th>
+                <th>Created Date</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat='product in products | filter: filter_product'>
+                    <td ng-bind='product.name'></td>
+                    <td ng-bind='product.created_at'></td>
+                </tr>
+            </tbody>
+        </table>
+        <a href="#/products">Manage all Products</a>
+    </div>
+</div>

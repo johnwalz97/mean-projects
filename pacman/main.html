@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Pacman</title>
+    <script src="jquery.min.js"></script>
+    <script src="app.js"></script>
+    <style>
+        *  {
+            margin: 0px auto;
+            padding: 0px;
+            border: none;
+        }
+        body {
+            position: fixed;
+            height: 100%;
+            width: 100%;
+            background: black;
+        }
+        canvas {
+            position: absolute;
+            left: 50%;
+            margin-left: -300px;
+            top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <img src="images/background.png" width=600px height=600px>
+<script>
+    window.requestAnimationFrame = (function () {
+    return window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.oRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function (callback) {
+              window.setTimeout(callback, 1000 / 60);
+            };
+    })();
+    var height = document.body.clientHeight;
+    var width = document.body.clientWidth;
+    var canvasElement = $("<canvas width='600' height='600'></canvas>");
+    var canvas = canvasElement.get(0).getContext("2d");
+    canvasElement.appendTo('body');
+    
+    function GameEngine() {
+        this.initialize = function() {
+            new Boundary();
+            new Box(60, 60, 50, 15);
+            new Box(165, 60, 70, 15);
+            new Box(60, 130, 50, 5);
+            new Tee(165, 130, "right");
+            new Tee(230, 130, "down");
+            new Tee(420, 130, "left");
+        }
+        this.loop = function(){
+            pacman.draw();
+            //for(ghost in ghosts){
+            //    ghost.draw();
+            //}
+        }
+    }
+    function Boundary() {
+        canvas.beginPath();
+        canvas.moveTo(10, 0);
+        canvas.lineTo(10, 190);
+        canvas.lineTo(110, 190);
+        canvas.lineTo(110, 250);
+        canvas.lineTo(0, 250);
+        canvas.moveTo(0, 300);
+        canvas.lineTo(110, 300);
+        canvas.lineTo(110, 365);
+        canvas.lineTo(10, 365);
+        canvas.lineTo(10, 475);
+        canvas.lineTo(50, 475);
+        canvas.lineTo(10, 475);
+        canvas.lineTo(10,590);
+        canvas.lineTo(-15 + 590,590);
+        canvas.lineTo(-15 + 590, 475);
+        canvas.lineTo(-15 + 540, 475);
+        canvas.lineTo(-15 + 590, 475);
+        canvas.lineTo(-15 + 590, 365);
+        canvas.lineTo(-15 + 490, 365);
+        canvas.lineTo(-15 + 490, 300);
+        canvas.lineTo(-15 + 600, 300);
+        canvas.moveTo(-15 + 600, 250);
+        canvas.lineTo(-15 + 490, 250);
+        canvas.lineTo(-15 + 490, 190);
+        canvas.lineTo(-15 + 590, 190);
+        canvas.lineTo(-15 + 590,10);
+        canvas.lineTo(290, 10);
+        canvas.lineTo(290, 87);
+        canvas.lineTo(290, 10);
+        canvas.lineTo(10,10);
+        canvas.lineWidth = 20;
+        canvas.strokeStyle = '#ff0000';
+        canvas.stroke();
+    }
+    function Box(x, y, width, height) {
+        canvas.rect(x, y, width, height);
+        canvas.stroke();
+    }
+    function Tee(x, y, orientation){
+        if (orientation == "right") {
+            canvas.moveTo(x, y -10);
+            canvas.lineTo(x, y + 60);
+            canvas.lineTo(x + 70, y + 60);
+            canvas.lineTo(x, y + 60)
+            canvas.lineTo(x, y + 131);
+            canvas.stroke();
+        }
+        if (orientation == "down") {
+            canvas.moveTo(x - 10, y);
+            canvas.lineTo(x + 60, y);
+            canvas.lineTo(x + 60, y + 70);
+            canvas.lineTo(x + 60, y)
+            canvas.lineTo(x + 130, y);
+            canvas.stroke();
+        }
+        if (orientation == "left") {
+            canvas.moveTo(x, y -10);
+            canvas.lineTo(x, y + 60);
+            canvas.lineTo(x - 70, y + 60);
+            canvas.lineTo(x, y + 60)
+            canvas.lineTo(x, y + 131);
+            canvas.stroke();
+        }
+    }
+    var game = new GameEngine;
+    var pacman = {
+        x: 0,
+        draw: function () {
+            console.log("updating");
+            pacman.x += 1;
+            canvas.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.beginPath();
+            canvas.arc(this.x, 100, 50, (Math.PI / 180) * 0, (Math.PI / 180) * 360);
+            canvas.fillStyle = '#FFFF00';
+            canvas.fill();
+        }
+    };
+    //game.initialize();
+    setInterval(pacman.draw, 0);
+    //window.requestAnimationFrame(pacman.draw);
+</script>
+</body>
+</html>
